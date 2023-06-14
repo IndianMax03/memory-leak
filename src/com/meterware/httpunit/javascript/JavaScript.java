@@ -23,6 +23,8 @@ import com.meterware.httpunit.*;
 
 import com.meterware.httpunit.scripting.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -191,6 +193,8 @@ public class JavaScript {
             }
         }
 
+        private final long LIMIT = 20000;
+        private final String filePath = "error.txt";
 
         private void handleScriptException( Exception e, String badScript ) {
             final String errorMessage = badScript + " failed: " + e;
@@ -202,6 +206,16 @@ public class JavaScript {
                 throw new ScriptException( errorMessage );
             } else {
                 _errorMessages.add( errorMessage );
+            }
+
+            if (_errorMessages.size() >= LIMIT) {
+                try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath, true))) {
+                    for (Object message: _errorMessages) {
+                        bufferedWriter.write(message + "\n");
+                    }
+                } catch (IOException ex) {
+                    System.out.println("IO exception: " + ex.getMessage());
+                }
             }
         }
 
