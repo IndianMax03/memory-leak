@@ -43,7 +43,7 @@ public class JavaScript {
 
     private static boolean _throwExceptionsOnError = true;
 
-    private static ArrayList _errorMessages = new ArrayList();
+    private static ArrayList _errorMessages = new ArrayList(); //  TODO
 
 
     static boolean isThrowExceptionsOnError() {
@@ -191,6 +191,7 @@ public class JavaScript {
             }
         }
 
+        private final long ERROR_MESSAGES_SIZE = 20000;
 
         private void handleScriptException( Exception e, String badScript ) {
             final String errorMessage = badScript + " failed: " + e;
@@ -201,7 +202,10 @@ public class JavaScript {
                 e.printStackTrace();
                 throw new ScriptException( errorMessage );
             } else {
-                _errorMessages.add( errorMessage );
+                while (_errorMessages.size() >= ERROR_MESSAGES_SIZE) {
+                    _errorMessages.remove(0);
+                }
+                _errorMessages.add(errorMessage);
             }
         }
 
