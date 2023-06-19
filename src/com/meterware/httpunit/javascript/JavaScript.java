@@ -43,7 +43,7 @@ public class JavaScript {
 
     private static boolean _throwExceptionsOnError = true;
 
-    private static ArrayList _errorMessages = new ArrayList();
+    private static ArrayList _errorMessages = new ArrayList(); //  TODO
 
 
     static boolean isThrowExceptionsOnError() {
