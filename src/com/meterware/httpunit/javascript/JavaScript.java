@@ -193,8 +193,10 @@ public class JavaScript {
             }
         }
 
-        private final long LIMIT = 20000;
+        private final long LIMIT = 200;
         private final String filePath = "error.txt";
+
+        //  com.meterware.httpunit.javascript.JavaScript
 
         private void handleScriptException( Exception e, String badScript ) {
             final String errorMessage = badScript + " failed: " + e;
@@ -213,8 +215,10 @@ public class JavaScript {
                     for (Object message: _errorMessages) {
                         bufferedWriter.write(message + "\n");
                     }
+                    JavaScript.clearErrorMessages();
                 } catch (IOException ex) {
                     System.out.println("IO exception: " + ex.getMessage());
+                    System.out.println("Memory leak risk!");
                 }
             }
         }
