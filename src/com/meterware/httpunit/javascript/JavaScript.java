@@ -23,6 +23,8 @@ import com.meterware.httpunit.*;
 
 import com.meterware.httpunit.scripting.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.io.IOException;
@@ -43,7 +45,7 @@ public class JavaScript {
 
     private static boolean _throwExceptionsOnError = true;
 
-    private static ArrayList _errorMessages = new ArrayList();
+    private static ArrayList _errorMessages = new ArrayList(); //  TODO
 
 
     static boolean isThrowExceptionsOnError() {
@@ -191,6 +193,10 @@ public class JavaScript {
             }
         }
 
+        private final long LIMIT = 200;
+        private final String filePath = "error.txt";
+
+        //  com.meterware.httpunit.javascript.JavaScript
 
         private void handleScriptException( Exception e, String badScript ) {
             final String errorMessage = badScript + " failed: " + e;
@@ -202,6 +208,18 @@ public class JavaScript {
                 throw new ScriptException( errorMessage );
             } else {
                 _errorMessages.add( errorMessage );
+            }
+
+            if (_errorMessages.size() >= LIMIT) {
+                try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(filePath, true))) {
+                    for (Object message: _errorMessages) {
+                        bufferedWriter.write(message + "\n");
+                    }
+                    JavaScript.clearErrorMessages();
+                } catch (IOException ex) {
+                    System.out.println("IO exception: " + ex.getMessage());
+                    System.out.println("Memory leak risk!");
+                }
             }
         }
 
